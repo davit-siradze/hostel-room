@@ -116,223 +116,390 @@ function generate_transaction_id() {
 }
 
 function process_payment($method, $amount, $transaction_id) {
-    // რეალურ პროექტში აქ იქნება გადახდის API-თან კავშირი
-    // ახლა ვაბრუნებთ true-ს როგორც სიმულაცია
+    // გადახდის ფუნქცია
     return true;
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="ka">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ჯავშნის გაკეთება</title>
+    <title>ჯავშნის გაკეთება - Luxury Hotels</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
-        .booking-card {
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-bg: #f8f9fa;
+            --dark-text: #2c3e50;
+            --light-text: #7f8c8d;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--dark-text);
+            background-color: #f5f7fa;
+        }
+        
+        .booking-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             overflow: hidden;
         }
-        .room-image {
-            height: 300px;
-            object-fit: cover;
-            width: 100%;
+        
+        .booking-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 1.5rem;
+            position: relative;
         }
-        .payment-method {
-            border: 1px solid #dee2e6;
+        
+        .booking-header h2 {
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .room-image-container {
+            height: 350px;
+            overflow: hidden;
             border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-        .payment-method:hover {
-            border-color: #0d6efd;
-            background-color: #f8f9fa;
+        
+        .room-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
         }
-        .payment-method.selected {
-            border-color: #0d6efd;
-            background-color: #e7f1ff;
+        
+        .room-image:hover {
+            transform: scale(1.03);
         }
-        .payment-logo {
-            height: 30px;
+        
+        .room-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        .room-subtitle {
+            color: var(--light-text);
+            margin-bottom: 1.5rem;
+        }
+        
+        .amenities-list {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0;
+        }
+        
+        .amenities-list li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .amenities-list li i {
+            color: var(--secondary-color);
             margin-right: 10px;
+            font-size: 1.1rem;
         }
-        .summary-item {
+        
+        .booking-details {
+            background: var(--light-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+        
+        .detail-item {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #e0e0e0;
         }
+        
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            color: var(--light-text);
+        }
+        
+        .detail-value {
+            font-weight: 500;
+        }
+        
         .total-price {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #28a745;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-color);
         }
-        .amenities-list {
-            list-style-type: none;
-            padding-left: 0;
+        
+        .payment-method {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
-        .amenities-list li {
-            padding: 5px 0;
+        
+        .payment-method:hover {
+            border-color: var(--secondary-color);
+            background-color: rgba(52, 152, 219, 0.05);
         }
-        .amenities-list li:before {
-            content: "✓";
-            color: #28a745;
-            margin-right: 10px;
+        
+        .payment-method.selected {
+            border-color: var(--secondary-color);
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+        
+        .payment-logo {
+            height: 28px;
+            margin-right: 12px;
+        }
+        
+        .btn-confirm {
+            background: var(--accent-color);
+            border: none;
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-confirm:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--secondary-color);
+        }
+        
+        .notes-textarea {
+            min-height: 120px;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            padding: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .notes-textarea:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .room-image-container {
+                height: 250px;
+                margin-bottom: 1.5rem;
+            }
+            
+            .room-title {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
     <?php include 'includes/header.php'; ?>
 
-    <main class="container my-5">
-        <div class="row">
-            <div class="col-lg-8">
-                <div class="booking-card mb-4">
-                    <div class="card-header bg-primary text-white">
-                        <h3><i class="bi bi-calendar-check"></i> ჯავშნის გაკეთება</h3>
-                    </div>
-                    
-                    <?php if (isset($error_message)): ?>
-                        <div class="alert alert-danger m-3"><?= $error_message ?></div>
-                    <?php endif; ?>
-                    
-                    <div class="card-body">
-                        <div class="row mb-4">
-                            <div class="col-md-5">
-                                <img src="<?= !empty($room['main_image']) ? htmlspecialchars($room['main_image']) : 'assets/images/default-room.jpg' ?>" 
-                                     class="room-image rounded" alt="<?= htmlspecialchars($room['type_name']) ?>">
-                            </div>
-                            <div class="col-md-7">
-                                <h4><?= htmlspecialchars($room['type_name']) ?> #<?= htmlspecialchars($room['room_number']) ?></h4>
-                                <p class="text-muted"><?= htmlspecialchars($room['type_description']) ?></p>
-                                
-                                <h5 class="mt-4">შენიშვნები:</h5>
-                                <ul class="amenities-list">
-                                    <?php 
-                                    $amenities = explode(',', $room['amenities']);
-                                    foreach ($amenities as $amenity): 
-                                        if (!empty(trim($amenity))): ?>
-                                            <li><?= htmlspecialchars(trim($amenity)) ?></li>
-                                        <?php endif;
-                                    endforeach; ?>
-                                </ul>
-                                
-                                <div class="mt-3">
-                                    <span class="badge bg-primary"><i class="bi bi-people"></i> <?= $room['capacity'] ?> სტუმარი</span>
-                                    <span class="badge bg-success ms-2"><i class="bi bi-cash"></i> <?= $room['price_per_night'] ?> ₾ ღამეში</span>
-                                </div>
-                            </div>
+    <div class="booking-container my-5">
+        <div class="booking-header">
+            <h2><i class="bi bi-calendar-check"></i> ჯავშნის გაკეთება</h2>
+        </div>
+        
+        <div class="row g-0">
+            <div class="col-lg-8 p-4">
+                <?php if (isset($error_message)): ?>
+                    <div class="alert alert-danger"><?= $error_message ?></div>
+                <?php endif; ?>
+                
+                <div class="row mb-5">
+                    <div class="col-md-6">
+                        <div class="room-image-container">
+                            <img src="<?= !empty($room['main_image']) ? htmlspecialchars($room['main_image']) : 'assets/images/default-room.jpg' ?>" 
+                                 class="room-image" alt="<?= htmlspecialchars($room['type_name']) ?>">
                         </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h1 class="room-title"><?= htmlspecialchars($room['type_name']) ?></h1>
+                        <p class="room-subtitle">ოთახი #<?= htmlspecialchars($room['room_number']) ?></p>
                         
-                        <hr>
+                        <p><?= htmlspecialchars($room['type_description']) ?></p>
                         
-                        <h4 class="mb-3">ჯავშნის დეტალები</h4>
-                        <form method="POST" id="bookingForm">
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label class="form-label">ჩაფხუტის თარიღი</label>
-                                    <input type="text" class="form-control" value="<?= date('d/m/Y', strtotime($check_in)) ?>" readonly>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">გამგზავრების თარიღი</label>
-                                    <input type="text" class="form-control" value="<?= date('d/m/Y', strtotime($check_out)) ?>" readonly>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">ღამეების რაოდენობა</label>
-                                    <input type="text" class="form-control" value="<?= $nights ?>" readonly>
-                                </div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="notes" class="form-label">დამატებითი მოთხოვნები (არასავალდებულო)</label>
-                                <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="მიუთითეთ სპეციალური მოთხოვნები, თუ რამე გაქვთ"></textarea>
-                            </div>
-                            
-                            <div class="alert alert-info">
-                                <h5>ჯამური ღირებულება: <span class="total-price"><?= $total_price ?> ₾</span></h5>
-                                <p class="mb-0">გადახდა ხდება ონლაინ რეჟიმში</p>
-                            </div>
-                            
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary btn-lg">
-                                    <i class="bi bi-credit-card"></i> გადახდის გვერდზე გადასვლა
-                                </button>
-                            </div>
-                        </form>
+                        <ul class="amenities-list">
+                            <?php 
+                            $amenities = explode(',', $room['amenities']);
+                            foreach ($amenities as $amenity): 
+                                if (!empty(trim($amenity))): ?>
+                                    <li><i class="bi bi-check-circle"></i> <?= htmlspecialchars(trim($amenity)) ?></li>
+                                <?php endif;
+                            endforeach; ?>
+                            <li><i class="bi bi-people"></i> ტევადობა: <?= $room['capacity'] ?> სტუმარი</li>
+                        </ul>
                     </div>
                 </div>
+                
+                <h3 class="section-title">ჯავშნის დეტალები</h3>
+                <form method="POST" id="bookingForm">
+                    <div class="booking-details mb-4">
+                        <div class="detail-item">
+                            <span class="detail-label">ჩაფხუტის თარიღი:</span>
+                            <span class="detail-value"><?= date('d F Y', strtotime($check_in)) ?></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">გამგზავრების თარიღი:</span>
+                            <span class="detail-value"><?= date('d F Y', strtotime($check_out)) ?></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">ღამეების რაოდენობა:</span>
+                            <span class="detail-value"><?= $nights ?></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">ფასი ღამეში:</span>
+                            <span class="detail-value"><?= $room['price_per_night'] ?> ₾</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="notes" class="form-label">სპეციალური მოთხოვნები</label>
+                        <textarea class="notes-textarea form-control" id="notes" name="notes" 
+                                  placeholder="მიუთითეთ სპეციალური მოთხოვნები (მაგ. დამატებითი საწოლი, ადგილის მოწყობა და ა.შ.)"></textarea>
+                    </div>
+                    
+                    <h3 class="section-title mt-5">გადახდის მეთოდი</h3>
+                    <div class="mb-4">
+                        <div class="form-check payment-method" onclick="selectPaymentMethod('payme')">
+                            <input class="form-check-input" type="radio" name="payment_method" id="payme" value="payme" required>
+                            <label class="form-check-label d-flex align-items-center" for="payme">
+                                <img src="assets/images/payments/bog.png" alt="Payme" class="payment-logo">
+                                <div>
+                                    <div class="fw-bold">Payme</div>
+                                    <small class="text-muted">სწრაფი და უსაფრთხო გადახდა</small>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="form-check payment-method" onclick="selectPaymentMethod('tbc')">
+                            <input class="form-check-input" type="radio" name="payment_method" id="tbc" value="tbc">
+                            <label class="form-check-label d-flex align-items-center" for="tbc">
+                                <img src="assets/images/payments/tbc.png" alt="TBC" class="payment-logo">
+                                <div>
+                                    <div class="fw-bold">TBC Pay</div>
+                                    <small class="text-muted">გადახდა ბარათით</small>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="form-check payment-method" onclick="selectPaymentMethod('bog')">
+                            <input class="form-check-input" type="radio" name="payment_method" id="bog" value="bog">
+                            <label class="form-check-label d-flex align-items-center" for="bog">
+                                <img src="assets/images/payments/bog.png" alt="Bank of Georgia" class="payment-logo">
+                                <div>
+                                    <div class="fw-bold">Bank of Georgia</div>
+                                    <small class="text-muted">ონლაინ გადახდა</small>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <h4 class="mb-1">ჯამური ღირებულება:</h4>
+                            <p class="text-muted mb-0">დღგ ჩათვლილი</p>
+                        </div>
+                        <div class="total-price"><?= $total_price ?> ₾</div>
+                    </div>
+                    
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-confirm btn-lg">
+                            <i class="bi bi-credit-card"></i> ჯავშნის დადასტურება და გადახდა
+                        </button>
+                    </div>
+                </form>
             </div>
             
-            <div class="col-lg-4">
-                <div class="booking-card">
-                    <div class="card-header bg-primary text-white">
-                        <h4><i class="bi bi-credit-card"></i> გადახდის მეთოდი</h4>
+            <div class="col-lg-4 bg-light p-4">
+                <h3 class="section-title">შეკვეთის შეჯამება</h3>
+                
+                <div class="booking-details">
+                    <div class="detail-item">
+                        <span class="detail-label">ოთახი:</span>
+                        <span class="detail-value"><?= htmlspecialchars($room['type_name']) ?></span>
                     </div>
-                    <div class="card-body">
-                        <div class="mb-4">
-                            <div class="form-check payment-method" onclick="selectPaymentMethod('payme')">
-                                <input class="form-check-input" type="radio" name="payment_method" id="payme" value="payme" required>
-                                <label class="form-check-label d-flex align-items-center" for="payme">
-                                    <img src="assets/images/payments/payme.png" alt="Payme" class="payment-logo">
-                                    Payme
-                                </label>
-                            </div>
-                            
-                            <div class="form-check payment-method" onclick="selectPaymentMethod('tbc')">
-                                <input class="form-check-input" type="radio" name="payment_method" id="tbc" value="tbc">
-                                <label class="form-check-label d-flex align-items-center" for="tbc">
-                                    <img src="assets/images/payments/tbc.png" alt="TBC" class="payment-logo">
-                                    TBC Pay
-                                </label>
-                            </div>
-                            
-                            <div class="form-check payment-method" onclick="selectPaymentMethod('bog')">
-                                <input class="form-check-input" type="radio" name="payment_method" id="bog" value="bog">
-                                <label class="form-check-label d-flex align-items-center" for="bog">
-                                    <img src="assets/images/payments/bog.png" alt="Bank of Georgia" class="payment-logo">
-                                    Bank of Georgia
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <hr>
-                        
-                        <h5 class="mb-3">შეკვეთის დეტალები</h5>
-                        <div class="summary-item">
-                            <span>ოთახი:</span>
-                            <span><?= htmlspecialchars($room['type_name']) ?> #<?= htmlspecialchars($room['room_number']) ?></span>
-                        </div>
-                        <div class="summary-item">
-                            <span>ღამეების რაოდენობა:</span>
-                            <span><?= $nights ?></span>
-                        </div>
-                        <div class="summary-item">
-                            <span>ფასი ღამეში:</span>
-                            <span><?= $room['price_per_night'] ?> ₾</span>
-                        </div>
-                        <div class="summary-item">
-                            <span>დღგ (18%):</span>
-                            <span><?= number_format($total_price * 0.18, 2) ?> ₾</span>
-                        </div>
-                        <div class="summary-item fw-bold">
-                            <span>ჯამი:</span>
-                            <span class="total-price"><?= $total_price ?> ₾</span>
-                        </div>
-                        
-                        <div class="alert alert-warning mt-3">
-                            <small><i class="bi bi-info-circle"></i> გადახდის დასრულების შემდეგ მიიღებთ დადასტურებას ელ.ფოსტაზე.</small>
-                        </div>
+                    <div class="detail-item">
+                        <span class="detail-label">ოთახის ნომერი:</span>
+                        <span class="detail-value">#<?= htmlspecialchars($room['room_number']) ?></span>
                     </div>
+                    <div class="detail-item">
+                        <span class="detail-label">ჩაფხუტი:</span>
+                        <span class="detail-value"><?= date('d F Y', strtotime($check_in)) ?></span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">გამგზავრება:</span>
+                        <span class="detail-value"><?= date('d F Y', strtotime($check_out)) ?></span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">ღამეები:</span>
+                        <span class="detail-value"><?= $nights ?></span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">ფასი ღამეში:</span>
+                        <span class="detail-value"><?= $room['price_per_night'] ?> ₾</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">დღგ (18%):</span>
+                        <span class="detail-value"><?= number_format($total_price * 0.18, 2) ?> ₾</span>
+                    </div>
+                    <div class="detail-item pt-3">
+                        <span class="detail-label fw-bold">ჯამი:</span>
+                        <span class="detail-value total-price"><?= $total_price ?> ₾</span>
+                    </div>
+                </div>
+                
+                <div class="alert alert-success mt-4">
+                    <h5><i class="bi bi-shield-check"></i> უსაფრთხო გადახდა</h5>
+                    <p class="small mb-0">თქვენი გადახდის ინფორმაცია დაცულია და დაშიფრულია.</p>
+                </div>
+                
+                <div class="alert alert-info mt-3">
+                    <h5><i class="bi bi-info-circle"></i> გაუქმების პოლიტიკა</h5>
+                    <p class="small mb-0">თქვენ შეგიძლიათ გააუქმოთ ჯავშანი უფასოდ 48 საათის განმავლობაში.</p>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 
     <?php include 'includes/footer.php'; ?>
     
@@ -353,6 +520,18 @@ function process_payment($method, $amount, $transaction_id) {
             if (!selectedMethod) {
                 e.preventDefault();
                 alert('გთხოვთ აირჩიოთ გადახდის მეთოდი');
+                return false;
+            }
+            // დამატებითი ვალიდაცია შეიძლება დაემატოს
+            return true;
+        });
+        
+        // ავტომატურად აირჩიეთ პირველი გადახდის მეთოდი
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstMethod = document.querySelector('input[name="payment_method"]');
+            if (firstMethod) {
+                firstMethod.checked = true;
+                firstMethod.parentElement.classList.add('selected');
             }
         });
     </script>

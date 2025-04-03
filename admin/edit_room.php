@@ -225,7 +225,7 @@ if (isset($_GET['delete_image'])) {
     </style>
 </head>
 <body>
-    <?php include '../includes/header.php'; ?>
+
     
     <div class="container-fluid">
         <div class="row">

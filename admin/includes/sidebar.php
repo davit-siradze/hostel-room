@@ -2,6 +2,11 @@
     <div class="position-sticky pt-3">
         <ul class="nav flex-column">
             <li class="nav-item">
+                <a class="nav-link text-white" href="#">
+                    <i class="bi bi bi-house "></i> მთავარი
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link active text-white" href="dashboard.php">
                     <i class="bi bi-speedometer2 me-2"></i> დაფა
                 </a>

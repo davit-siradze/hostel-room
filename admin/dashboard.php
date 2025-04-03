@@ -28,7 +28,6 @@ $recent_bookings = $pdo->query("SELECT b.*, u.username, r.room_number, rt.name a
     <link rel="stylesheet" href="../assets/css/admin.css">
 </head>
 <body>
-    <?php include '../includes/header.php'; ?>
 
     <div class="container-fluid">
         <div class="row">
