@@ -1,7 +1,5 @@
 # Hostel Room Management System
 
-![Hostel Management System Screenshot](screenshot.png)
-
 A complete hostel room booking and management system with admin panel, user authentication, and payment processing.
 
 ## Features
