@@ -1,0 +1,87 @@
+/* ძირითადი სტილები */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.hero-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../images/hotel-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    border-radius: 10px;
+}
+
+.card {
+    transition: transform 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* ადმინისტრირების სტილები */
+.sidebar {
+    min-height: 100vh;
+    padding-top: 20px;
+}
+
+.nav-link {
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    font-weight: bold;
+}
+
+/* რესპონსიული ცხრილები */
+.table-responsive {
+    overflow-x: auto;
+}
+
+/* ფორმების სტილები */
+.form-control, .form-select {
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: 500;
+}
+
+/* პროფილის სურათი */
+.profile-img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 5px solid white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* დატვირთვის ინდიკატორი */
+.loader {
+    display: none;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
